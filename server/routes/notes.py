@@ -1,7 +1,7 @@
 import json
 from server import app, c, conn
-from utils import make_response, login_required
-from flask import request
+from utils import make_response, login_required, cryptrand
+from flask import request, g
 
 @app.route('/notes/<note_id>', methods=['POST','GET'])
 @login_required
@@ -25,8 +25,9 @@ def messages_route():
 	if request.method == 'GET':
 		c.execute("SELECT note_id, data FROM notes WHERE user_id=?",(g.user_id))
 	elif request.method == 'PUT':
-		js = json.loads(request.data)
+		
 		note_id = cryptrand(64)
-		c.execute("INSERT INTO notes (user_id, data, note_id)", (g.user_id, data, note_id))
-		return
+		c.execute("INSERT INTO notes (user_id, data, note_id) VALUES (?, ?, ?)", (g.user_id, request.data, note_id))
+
+		return make_response(request.data, status=200)
 	return
