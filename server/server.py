@@ -15,7 +15,7 @@ cors = CORS(app)
 
 #setup for reference
 c.execute(''' CREATE TABLE IF NOT EXISTS `users` (username text, salt text, verifier text) ''')
-c.execute(''' CREATE TABLE IF NOT EXISTS `notes` (note_id text, user_id int, data text)''')
+c.execute(''' CREATE TABLE IF NOT EXISTS `notes` (id text, user_id int, data text, iv text)''')
 c.execute(''' CREATE TABLE IF NOT EXISTS `sessions` (user_id int, UID int, session_token text) ''')
 conn.commit()
 
