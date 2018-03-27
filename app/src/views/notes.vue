@@ -3,10 +3,11 @@
     <h1>Your Notes</h1>
     <button @click="toggleForm()">Add A Note</button>
     <div v-if="show_form">
-    	<note_form v-if="show_form" />	
+    	<note_form :note="{ data:empty_note.data }" v-if="show_form" />	
     </div>
-	
-    <note_list />
+	  <div v-else>
+      <note_list />
+    </div>
   </div>
 </template>
 
@@ -22,7 +23,13 @@ export default {
   },
   data(){
   	return {
-  		show_form: false
+  		show_form: false,
+      empty_note: { 
+        data: {
+          title: '',
+          body: ''
+        }
+      }
   	};
   },
   methods:{

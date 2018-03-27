@@ -17,7 +17,7 @@ const API = {
     },
 
     get(endpoint, options) {
-        return get_endpoint(endpoint, options);
+        return this.get_endpoint(endpoint, options);
     },
     put(endpoint, options) {
         return this.post_endpoint(endpoint, options, "PUT");

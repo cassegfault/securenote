@@ -4,7 +4,7 @@ const LS_USER_KEY = 'securenote-user-key';
 
 export const state = {
 	is_authenticated: false,
-	_private_key: asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(window.localStorage.getItem(LS_USER_KEY)))
+	_private_key: window.localStorage.getItem(LS_USER_KEY) ? asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(window.localStorage.getItem(LS_USER_KEY))) : null,
 };
 
 export const getters = {

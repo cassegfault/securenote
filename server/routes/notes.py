@@ -1,6 +1,6 @@
 import json
 from server import app, c, conn
-from utils import make_response, login_required, cryptrand, int_to_hex, hex_to_int
+from utils import make_response, login_required, cryptrand, int_to_hex, hex_to_int, BAD_AUTH_RESPONSE
 from flask import request, g
 
 @app.route('/notes/<note_id>', methods=['POST','GET'])
@@ -17,7 +17,7 @@ def message_route(note_id):
 			'iv': row[1],
 			'id': note_id
 		}
-		return make_response(row)
+		return make_response(json.dumps(note))
 	elif request.method == 'POST':
 		js = json.loads(request.data)
 		c.execute("UPDATE notes SET data=? WHERE id=? AND user_id=?", (js['data'], note_id, g.user_id))
