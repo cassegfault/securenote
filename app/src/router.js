@@ -7,6 +7,8 @@ import note from './views/note.vue'
 Vue.use(Router);
 
 export default new Router({
+  mode:'history',
+  hashbang:false,
   routes: [
     {
       path: '/',
