@@ -1,16 +1,14 @@
 <template>
 	<div class="login-container">
-		<div class="login-error" v-if="showLoginError">
-			<span v-if="fields_empty">
-				Username and password are required.
-			</span>
-			<span v-else>
-				Either Username or Password are incorrect.	
-			</span>
+		<div class="login-error" v-if="errorMessage">
+			{{errorMessage}}
+		</div>
+		<div class="create-success" v-if="showCreatedSuccess">
+			User created successfully, please log in
 		</div>
 		<div class="login-form">
 			<label class="login-label" for="username">Username</label>
-			<input class="login-field" type="text" name="username" v-model="username" @focus="clear_error()" />
+			<input class="login-field" type="text" name="username" v-model="username" @focus="clear_error()" :disabled="disableForm" />
 			<br>
 			<label class="login-label" for="password">Password</label>
 			<input class="login-field" type="password" name="password" v-model="password" @focus="clear_error()" />
@@ -26,6 +24,13 @@
 <script>
 import UserAuth from '../services/srp.js';
 import { mapActions } from 'vuex';
+
+const messages = {
+	no_credentials:  "Username and password are required.",
+	bad_credentials: "Either Username or Password are incorrect.",
+	error_creating:  "There was an error creating your account, please try again.",
+};
+
 export default {
 	name: 'login_form',
 	props: {	},
@@ -33,25 +38,23 @@ export default {
 		return {
 			username: '',
 			password: '',
-			showLoginError:false
-		}
-	},
-	computed: {
-		fields_empty(){
-			return this.username.length < 1 || this.password.length < 1;
+			disableForm:false,
+			errorMessage: false,
+			showCreatedSuccess: false
 		}
 	},
 	methods: {
 		clear_error(){
-			this.showLoginError = false;
+			this.errorMessage = false;
 		},
 		login() {
-			if(this.fields_empty){
-				this.showLoginError = true;
+			if(this.username.length < 1 || this.password.length < 1){
+				this.errorMessage = messages.no_credentials;
 				return;
 			}
+			this.disableForm = true;
+			this.errorMessage = false;
 			var ua = new UserAuth();
-			this.showLoginError = false;
 			var handleLogin = (res) => {
 				var salt = res.salt,
 					server_ephemeral = res.server_ephemeral;
@@ -64,17 +67,28 @@ export default {
 					// continue
 					this.check_authentication();
 					this.set_private_key(ua.private_key);
+					this.disableForm = false;
 				} else {
-					console.log(ua);
-					this.showLoginError = true;
+					this.errorMessage = messages.bad_credentials;
+					this.disableForm = false;
 				}
 			};
-			var auth_failed = () => { console.log('promise error'); this.showLoginError = true; };
+			var auth_failed = () => { 
+				this.disableForm = false;
+				this.errorMessage = messages.bad_credentials; 
+			};
 
 			ua.login(this.username, this.password).then(handleLogin).catch(auth_failed);
 		},
 		create_user(){
-			UserAuth.create_user(this.username, this.password);
+			this.disableForm = true;
+			UserAuth.create_user(this.username, this.password).then(()=>{
+				this.disableForm = false;
+				this.showCreatedSuccess = true;
+			}).catch(()=>{
+				this.disableForm = false;
+				this.errorMessage = messages.error_creating;
+			});
 		},
 		...mapActions({ check_authentication:'user/check_authentication', set_private_key:'user/set_private_key' })
 	}

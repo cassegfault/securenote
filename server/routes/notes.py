@@ -20,7 +20,7 @@ def message_route(note_id):
 		return make_response(json.dumps(note))
 	elif request.method == 'POST':
 		js = json.loads(request.data)
-		c.execute("UPDATE notes SET data=? WHERE id=? AND user_id=?", (js['data'], note_id, g.user_id))
+		c.execute("UPDATE notes SET data=?, iv=? WHERE id=? AND user_id=?", (js['data'], js['iv'], note_id, g.user_id))
 		return make_response()
 	return
 

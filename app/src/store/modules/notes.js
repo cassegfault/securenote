@@ -80,10 +80,9 @@ export const actions = {
         var user_key = rootGetters['user/_private_key'],
         	new_note = !note_obj.hasOwnProperty('id');
 
-        if(!note_obj.hasOwnProperty('iv')){
-        	note_obj.iv = asmCrypto.bytes_to_hex(asmCrypto.getRandomValues(new Uint8Array(16)));
-        }
-        
+        // Whether we're updating or adding, we need a new IV
+        note_obj.iv = asmCrypto.bytes_to_hex(asmCrypto.getRandomValues(new Uint8Array(16)));
+
         if (note_obj.decrypted) {
             note_obj.data = encrypt_note(note_obj,user_key);
             note_obj.decrypted = false;
