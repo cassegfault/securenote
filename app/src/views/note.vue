@@ -1,7 +1,7 @@
 <template>
   <div class="note">
     <div v-if="note">
-      <h1>Editing: <i>{{ note.data.title }}</i></h1>
+      <h4><router-link class="back-link" :to="{ path:'/notes' }">&laquo;</router-link>Editing: <i>{{ note.data.title }}</i></h4>
       <note_form :note="note" />
     </div>
     <div v-else>
@@ -20,7 +20,6 @@ export default {
   },
   computed: {
     note() {
-      console.log(this.note_by_id(this.$route.params.id))
       return this.note_by_id(this.$route.params.id);
     },
     ...mapGetters({
@@ -36,6 +35,10 @@ export default {
 };	
 </script>
 
-<style>
-	
+<style scoped>
+.back-link {
+  text-decoration:none;
+  color:inherit;
+  padding-right:10px;
+}
 </style>

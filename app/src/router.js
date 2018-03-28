@@ -19,7 +19,7 @@ export default new Router({
       component: notes
     },
     {
-      path: '/note/:id',
+      path: '/notes/:id',
       name: 'note',
       component: note
     }

@@ -1,16 +1,23 @@
 <template>
-	<div>
-		<div v-if="showLoginError">There was a problem while logging in.</div>
+	<div class="login-container">
+		<div class="login-error" v-if="showLoginError">
+			<span v-if="fields_empty">
+				Username and password are required.
+			</span>
+			<span v-else>
+				Either Username or Password are incorrect.	
+			</span>
+		</div>
 		<div class="login-form">
-			<label for="username">Username</label>
-			<input type="text" name="username" v-model="username" />
+			<label class="login-label" for="username">Username</label>
+			<input class="login-field" type="text" name="username" v-model="username" @focus="clear_error()" />
 			<br>
-			<label for="password">Password</label>
-			<input type="password" name="password" v-model="password" />
+			<label class="login-label" for="password">Password</label>
+			<input class="login-field" type="password" name="password" v-model="password" @focus="clear_error()" />
 			
-			<div>
-				<button v-on:click="create_user">Sign Up</button>
-				<button v-on:click="login">Sign In</button>
+			<div class="actions">
+				<button class="sign-up" @click="create_user">Sign Up</button>
+				<button class="sign-in" @click="login">Sign In</button>
 			</div>
 		</div>
 	</div>
@@ -29,8 +36,20 @@ export default {
 			showLoginError:false
 		}
 	},
+	computed: {
+		fields_empty(){
+			return this.username.length < 1 || this.password.length < 1;
+		}
+	},
 	methods: {
+		clear_error(){
+			this.showLoginError = false;
+		},
 		login() {
+			if(this.fields_empty){
+				this.showLoginError = true;
+				return;
+			}
 			var ua = new UserAuth();
 			this.showLoginError = false;
 			var handleLogin = (res) => {
@@ -63,18 +82,40 @@ export default {
 </script>
 
 <style scoped lang="less">
-h3 {
-	margin: 40px 0 0;
+.login-container{
+	max-width: 300px;
+	margin:0 auto;
+	
 }
-ul {
-	list-style-type: none;
-	padding: 0;
+.login-label {
+	display:block;
+	padding:5px 0 10px 0;
 }
-li {
-	display: inline-block;
-	margin: 0 10px;
+.login-field{
+	width:100%;
 }
-a {
-	color: #42b983;
+.login-error{
+
+}
+.actions {
+	text-align:right;
+	padding:10px 0;
+}
+.sign-up{
+	margin-right:25px;
+}
+.sign-in{
+	background-color:#00e74c;
+	&:hover {
+		background-color: #1cd559;
+	}
+}
+.login-error{
+	padding:10px;
+	background-color: #ff252580;
+	border: 1px solid #c95858;
+	display: block;
+	text-align: center;
+	color: #773434;
 }
 </style>

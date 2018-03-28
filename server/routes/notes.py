@@ -36,6 +36,7 @@ def messages_route():
 				'data': row[1],
 				'iv': row[2]
 				})
+		# TODO: Paginate
 		return make_response(json.dumps(notes))
 	elif request.method == 'PUT':
 		js = json.loads(request.data)
