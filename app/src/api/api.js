@@ -1,5 +1,5 @@
 const API = {
-    server_location: "http://sn.local/api",
+    server_location: "https://securenote.v3x.pw/api",
     options_to_formdata(options) {
         if (typeof options === 'string') {
             return options;
