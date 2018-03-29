@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    test
+    Welcome to SecureNote
   </div>
 </template>
 
