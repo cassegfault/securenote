@@ -1,21 +1,16 @@
 <template>
 	<div class="notes">
-		<h1 class="page-title">Your Notes</h1>
 		<div class="actions">
-			<button class="add-note" @click="toggleForm()">Add A Note</button>
+			<note_form />
 		</div>
-		<div v-if="show_form">
-			<note_form :note="{ data:empty_note.data }" v-if="show_form" />	
-		</div>
-		<div v-else>
-			<note_list />
-		</div>
+		<note_list />
 	</div>
 </template>
 
 <script>
 import note_list from '@/components/note_list.vue';
 import note_form from '@/components/note_form.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	name: 'notes',
@@ -23,20 +18,16 @@ export default {
 		note_list,
 		note_form
 	},
-	data(){
-		return {
-			show_form: false,
-			empty_note: { 
-				data: {
-					title: '',
-					body: ''
-				}
-			}
-		};
-	},
 	methods:{
-		toggleForm(){
-			this.show_form = !this.show_form;
+		...mapActions({
+			add_note: 'notes/add_note'
+		}),
+		addNote(){
+			this.add_note({
+				data: ''
+			}, (note)=>{
+				this.$router.push({ path:`/notes/${note.id}`});
+			});
 		}
 	}
 };
@@ -47,6 +38,8 @@ export default {
 	margin:0;
 }
 .actions {
+	max-width:500px;
 	text-align:right;
+	margin:0 auto 20px auto;
 }
 </style>

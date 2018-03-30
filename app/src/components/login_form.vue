@@ -67,6 +67,7 @@ export default {
 					// continue
 					this.check_authentication();
 					this.set_private_key(ua.private_key);
+					this.set_username(ua.username);
 					this.disableForm = false;
 				} else {
 					this.errorMessage = messages.bad_credentials;
@@ -90,7 +91,11 @@ export default {
 				this.errorMessage = messages.error_creating;
 			});
 		},
-		...mapActions({ check_authentication:'user/check_authentication', set_private_key:'user/set_private_key' })
+		...mapActions({ 
+			check_authentication: 'user/check_authentication', 
+			set_private_key: 'user/set_private_key',
+			set_username: 'user/set_username'
+		})
 	}
 };
 </script>

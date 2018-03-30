@@ -3,7 +3,7 @@ from server import app, c, conn
 from utils import make_response, login_required, cryptrand, int_to_hex, hex_to_int, BAD_AUTH_RESPONSE
 from flask import request, g
 
-@app.route('/notes/<note_id>', methods=['POST','GET'])
+@app.route('/notes/<note_id>', methods=['POST','GET','DELETE'])
 @login_required
 def message_route(note_id):
 	c.execute("SELECT id FROM notes WHERE user_id=? AND id=?", (g.user_id, note_id))
@@ -21,6 +21,9 @@ def message_route(note_id):
 	elif request.method == 'POST':
 		js = json.loads(request.data)
 		c.execute("UPDATE notes SET data=?, iv=? WHERE id=? AND user_id=?", (js['data'], js['iv'], note_id, g.user_id))
+		return make_response()
+	elif request.method == 'DELETE':
+		c.execute("DELETE FROM notes WHERE user_id=? AND id=?", (g.user_id,note_id))
 		return make_response()
 	return
 
