@@ -2,7 +2,7 @@
 	<div class="note">
 		<div v-if="note">
 			<h4><router-link class="back-link" :to="{ path:'/notes' }">&laquo;</router-link>Editing: <i>{{ note.data.title }}</i></h4>
-			<note_form :note="note" />
+			<note_form :always_expand="true" :note="note" />
 		</div>
 		<div v-else>
 			Loading and Decrypting

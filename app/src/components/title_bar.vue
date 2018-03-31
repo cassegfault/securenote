@@ -60,7 +60,7 @@ export default {
 			width: 0;
 			height: 0;
 			border-style: solid;
-			border-width: 0 10px 10px 10px;
+			border-width: 0 7px 7px 7px;
 			border-color: transparent transparent rgba(255,255,255,0.9) transparent;
 			right:15px;
 			bottom:100%;
@@ -75,14 +75,14 @@ export default {
 	padding:0;
 	margin:0;
 	right:0;
-	top:32px;
+	top:28px;
 	min-width:150px;
 	background-color:rgba(255,255,255,0.9);
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
 	border-radius:2px;
 }
 .account-options-menu-item{
-	padding:0 5px;
+	padding:5px;
 }
 
 </style>

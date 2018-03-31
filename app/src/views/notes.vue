@@ -1,7 +1,7 @@
 <template>
 	<div class="notes">
 		<div class="actions">
-			<note_form />
+			<note_form clear_on_blur="true"/>
 		</div>
 		<note_list />
 	</div>

@@ -1,33 +1,24 @@
 <template>
-	<div class="note-form">
-		<div v-if="false">
-		<label class="note-label" for="title">Title</label>
-		<input class="note-title" type="text" name="title" v-model="innerNote.data.title" />
-		<br>
-		<label class="note-label" for="body">Note</label>
-		<textarea class="note-body" v-model="innerNote.data.body" name="body" placeholder="add multiple lines"></textarea>
-		<div class="actions">
-			<button @click="save()">Save Note</button>
-		</div>
-		</div>
-
+	<div :class="['note-form', always_expand ? 'large-form' : '']">
 		<input 
 			ref="noteTitle"
 			v-model="innerNote.data.title"
 			placeholder="Title" 
 			class="note-title" 
 			type="text" 
-			v-if="form_extended"
+			v-if="show_extended_form"
 			@focus="form_focused('title')"
 			@blur="form_blurred()" />
-		<textarea 
+		<div 
+			contenteditable="true" 
 			ref="noteBody"
-			:class="['note-body', form_extended ? 'extended' : '']" 
-			placeholder="Take a note..." 
-			v-model="innerNote.data.body" 
+			:class="['note-body', editingBody.length ? '' : 'empty', show_extended_form ? 'extended' : '']" 
+			placeholder="Take a note..."
+			v-html="editingBody"
+			@input="body_input($event)" 
 			@focus="form_focused('body')" 
-			@blur="form_blurred()"></textarea>
-		<div class="actions" v-if="form_extended">
+			@blur="form_blurred()"></div>
+		<div class="actions" v-if="show_extended_form">
 			<button class="done-button" @click="save()">DONE</button>
 		</div>
 
@@ -39,7 +30,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { extend, debounce } from '@/utils.js'
 
 export default {
-	props: ["note"],
+	props: [ "note", "always_expand", "clear_on_blur" ],
 	data(){
 		var note_copy = extend({
 			data: {
@@ -50,10 +41,14 @@ export default {
 		return {
 			form_extended: false,
 			innerNote: note_copy,
-			focus: null
+			focus: null,
+			editingBody: note_copy.data.body
 		};
 	},
 	computed: {
+		show_extended_form() {
+			return this.form_extended || this.always_expand;
+		},
 		...mapGetters({
 			notes:'notes/all'
 		})
@@ -73,6 +68,9 @@ export default {
 				}
 			});
 		},500),
+		body_input(e){
+			this.innerNote.data.body = e.target.innerHTML;
+		},
 		clear_form(){
 			this.innerNote = { data: {} };
 			this.$refs.noteBody.value = '';
@@ -93,7 +91,11 @@ export default {
 				if(this.focus)
 					return;
 				if (this.innerNote && (this.innerNote.data.title.length || this.innerNote.data.body.length)){
-					this.save(function() { this.clear_form() });
+					this.save(function() {
+						if(this.clear_on_blur){ 
+							this.clear_form();
+						}
+					});
 					this.form_extended = false;
 				} else {
 					this.form_extended = false;
@@ -116,6 +118,10 @@ export default {
 .note-form {
 	text-align:left;
 	background-color:#fff;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+}
+.note-form.large-form {
+	box-shadow:none;
 }
 .note-label {
 	display:block;
@@ -124,6 +130,7 @@ export default {
 .note-title{
 	font-size:24px;
 	font-weight:500;
+	width:100%;
 	border:none;
 }
 .note-body{
@@ -134,6 +141,13 @@ export default {
 	min-height:2em;
 	font-family:inherit;
 	resize:none;
+	&.empty::before {
+		content:'Type a note...';
+	}
+	&:active, &:focus {
+		border:none;
+		outline:none;
+	}
 }
 .note-body.extended {
 	min-height:7em;
