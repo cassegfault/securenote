@@ -1,5 +1,5 @@
 #!/bin/bash
 
-git checkout master
+git checkout origin/master
 
 npm run build
