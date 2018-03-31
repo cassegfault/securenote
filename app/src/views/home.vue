@@ -8,7 +8,8 @@
 
 export default {
   name: 'home',
-  components: {
-  },
+  mounted: function(){
+  	this.$router.push({path: '/notes'});
+  }
 };
 </script>
