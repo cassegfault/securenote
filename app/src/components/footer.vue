@@ -1,6 +1,6 @@
 <template>
 	<footer class="app-footer page-container">
-		&copy; 2018 Chris Pauley. <a class="github-link" href="">View the source on GitHub</a>
+		&copy; 2018 Chris Pauley. <a class="github-link" href="https://github.com/chris-pauley/securenote">View the source on GitHub</a>
 	</footer>
 </template>
 
