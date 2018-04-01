@@ -2,7 +2,7 @@
 
 This is a side project of mine, don't use it in production, it may not be secure.
 
-Try it out here: (SecureNote)[https://securenote.v3x.pw/]
+Try it out here: [SecureNote](https://securenote.v3x.pw/)
 
 The securenote resources are provided by my own SecureCDN across several servers that are routed based on latency via AWS Route53. All resources are delivered with SSL.
 
