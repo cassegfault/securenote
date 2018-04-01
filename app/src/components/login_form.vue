@@ -1,12 +1,18 @@
 <template>
-	<div class="login-container">
-		<div class="login-error" v-if="errorMessage">
-			{{errorMessage}}
-		</div>
-		<div class="create-success" v-if="showCreatedSuccess">
-			User created successfully, please log in
+	<div class="page-container">
+		<div class="welcome-text">
+			<h3>Welcome to SecureNote</h3>
+			<p>
+				Feel free to create an account by choosing a username and password then clicking 'Sign Up' below.
+			</p>
 		</div>
 		<div class="login-form">
+			<div class="login-error" v-if="errorMessage">
+				{{errorMessage}}
+			</div>
+			<div class="create-success" v-if="showCreatedSuccess">
+				User created successfully, please log in
+			</div>
 			<label class="login-label" for="username">Username</label>
 			<input class="login-field" type="text" name="username" v-model="username" @focus="clear_error()" :disabled="disableForm" />
 			<br>
@@ -101,14 +107,17 @@ export default {
 </script>
 
 <style scoped lang="less">
-.login-container{
+.welcome-text {
+	text-align:center;
+}
+.login-form{
 	max-width: 300px;
 	margin:0 auto;
-	
 }
 .login-label {
 	display:block;
-	padding:5px 0 10px 0;
+	padding:10px 0 0 0;
+	margin-bottom:0;
 }
 .login-field{
 	width:100%;

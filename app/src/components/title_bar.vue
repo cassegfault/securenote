@@ -1,18 +1,20 @@
 <template>
 <nav class="title-bar">
-	<div class="title-bar-left">
-		<span class="title">SecureNote</span>	
-	</div>
-	<div class="title-bar-right" v-if="is_authenticated">
-		<div class="divider"></div>
-		<span class="account-options">
-			{{ username }}
-			<ul class="account-options-menu" ref="accountList">
-				<li class="account-options-menu-item">
-					<a @click="logout">Logout</a>		
-				</li>
-			</ul>
-		</span>
+	<div class="title-bar-container page-container">
+		<div class="title-bar-left">
+			<span class="title">SecureNote</span>	
+		</div>
+		<div class="title-bar-right" v-if="is_authenticated">
+			<div class="divider"></div>
+			<span class="account-options">
+				{{ username }}
+				<ul class="account-options-menu" ref="accountList">
+					<li class="account-options-menu-item">
+						<a @click="logout">Logout</a>		
+					</li>
+				</ul>
+			</span>
+		</div>
 	</div>
 </nav>
 </template>
@@ -33,11 +35,13 @@ export default {
 
 <style scoped lang="less">
 .title-bar{
-	display:flex;
-	width:100%;
-	border-bottom:1px solid rgba(0,0,0,0.2);
-	margin-bottom:20px;
+	background-color:#263238;
+	margin-bottom:40px;
 	padding:15px 0;
+	color:#fff;
+}
+.title-bar-container{
+	display:flex;
 }
 .title-bar-left,
 .title-bar-right {
@@ -69,6 +73,7 @@ export default {
 	}
 }
 .account-options .account-options-menu {
+	color:#333;
 	display:none;
 	position:absolute;
 	list-style:none;
@@ -77,7 +82,7 @@ export default {
 	right:0;
 	top:28px;
 	min-width:150px;
-	background-color:rgba(255,255,255,0.9);
+	background-color:#fff;
 	box-shadow: 0px 5px 5px rgba(0,0,0,0.3);
 	border-radius:2px;
 }

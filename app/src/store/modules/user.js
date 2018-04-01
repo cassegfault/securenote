@@ -37,15 +37,18 @@ export const mutations = {
 };
 
 export const actions = {
-	check_authentication: ({ commit }) => {
-		API.get_endpoint('/info')
-			.then(() => {
-				console.log('authenticated');
-				commit('set_is_authenticated', { value: true })
-			})
-			.catch(() => {
-				commit('set_is_authenticated', { value: false })
-			});
+	check_authentication: ({ commit, state }) => {
+		if(state._private_key){
+			API.get_endpoint('/info')
+				.then(() => {
+					commit('set_is_authenticated', { value: true });
+				})
+				.catch(() => {
+					commit('set_is_authenticated', { value: false });
+				});
+			} else {
+				commit('set_is_authenticated', { value: false });
+			}
 	},
 	set_private_key({ commit }, key) {
 		commit('set_private_key', { key });

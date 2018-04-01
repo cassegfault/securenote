@@ -40,6 +40,6 @@ export default {
 .actions {
 	max-width:500px;
 	text-align:right;
-	margin:0 auto 20px auto;
+	margin:0 auto 40px auto;
 }
 </style>

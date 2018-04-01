@@ -31,6 +31,8 @@ export default {
 		}),
 		
 		truncate(text){
+			if(!text)
+				return '';
 			if(text.length > 240){
 				let break_idx = text.substr(240).search(/[^\w]/);
 				if(break_idx > 0){

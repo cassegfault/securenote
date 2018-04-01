@@ -1,24 +1,27 @@
 <template>
-<div id="app" class="page-container">
+<div id="app">
 	<title_bar />
 	<div v-if="!is_authenticated">
 		<login_form />
 	</div>
-	<div v-else>
+	<div class="page-container" v-else>
 		<router-view />
 	</div>
+	<app_footer />
 </div>
 </template>
 
 <script>
 import login_form from '@/components/login_form.vue';
 import title_bar from '@/components/title_bar.vue';
+import app_footer from '@/components/footer.vue';
 import { mapGetters, mapActions } from 'vuex';
 export default {
 	name: 'app',
 	components: {
 		login_form,
-		title_bar
+		title_bar,
+		app_footer
 	},
 	computed: mapGetters({ is_authenticated: 'user/is_authenticated' }),
 	methods: mapActions({check_authentication: 'user/check_authentication', logout: 'user/logout'}),
@@ -43,10 +46,6 @@ export default {
 			color: #42b983;
 		}
 	}
-}
-.page-container {
-	margin:0 auto;
-	max-width:1200px
 }
 </style>
 <style src="@/assets/style.css"></style>

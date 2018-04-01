@@ -36,7 +36,6 @@ export class UserAuth {
 
 		// Password
 		this.password = password;
-		console.log(username, password)
 
 		// client private
 		this.private_ephemeral = AuthUtil.cryptrand(1024);
@@ -50,10 +49,6 @@ export class UserAuth {
 	}
 
 	send_proof(salt, server_ephemeral, auth_session) {
-		/*if(['private_key','verifier','username','password'].find((key) => !this.hasOwnProperty(key))){
-			console.error("Run login before send proof");
-			return;
-		}*/
 		this.salt = asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(salt));
 		this.auth_session = auth_session;
 		var B = asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(server_ephemeral));
@@ -63,9 +58,7 @@ export class UserAuth {
 		this.verifier = AuthUtil.N.power(AuthUtil.g, this.private_key);
 		var u = AuthUtil.H(this.public_ephemeral, B);
 		if (!u.compare(asmCrypto.BigNumber.fromNumber(0))){
-			console.log('u == 0?', u);
-		} else {
-			console.log(u.toString());
+			return new Promise((resolve,reject) => reject());
 		}
 		// client session key
 		var S_cL = B.subtract(AuthUtil.k.multiply(this.verifier)),
@@ -88,7 +81,6 @@ export class UserAuth {
 
 	check_proof(server_proof){
 		var to_check = AuthUtil.H(this.public_ephemeral,this.client_proof,this.shared_key).toString();
-		console.log(to_check, server_proof);
 		if(to_check == server_proof){
 			this.authenticated = true;
 		} else {

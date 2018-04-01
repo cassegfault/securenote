@@ -12,8 +12,7 @@
 		<div 
 			contenteditable="true" 
 			ref="noteBody"
-			:class="['note-body', editingBody.length ? '' : 'empty', show_extended_form ? 'extended' : '']" 
-			placeholder="Take a note..."
+			:class="['note-body', show_placeholder ? 'empty' : '', show_extended_form ? 'extended' : '']" 
 			v-html="editingBody"
 			@input="body_input($event)" 
 			@focus="form_focused('body')" 
@@ -42,7 +41,9 @@ export default {
 			form_extended: false,
 			innerNote: note_copy,
 			focus: null,
-			editingBody: note_copy.data.body
+			editingBody: note_copy.data.body || '',
+			show_placeholder: !note_copy.data.body || note_copy.data.body.length < 1,
+			empty_body: !note_copy.data.body || note_copy.data.body.length < 1
 		};
 	},
 	computed: {
@@ -69,12 +70,17 @@ export default {
 			});
 		},500),
 		body_input(e){
+			this.empty_body = !e.target.innerText.trim();
+			if(!this.empty_body)
+				this.show_placeholder = false;
 			this.innerNote.data.body = e.target.innerHTML;
 		},
 		clear_form(){
-			this.innerNote = { data: {} };
-			this.$refs.noteBody.value = '';
-			this.$refs.noteTitle.value = '';
+			this.innerNote = { data: { body: '', title: '' } };
+			//this.$refs.noteBody.innerHTML = '';
+			//this.$refs.noteTitle.value = '';
+			this.show_placeholder = true;
+			this.empty_body = true;
 		},
 		form_focused(element){
 			this.form_extended = true;
@@ -90,7 +96,7 @@ export default {
 			this.$nextTick(function formBlurred(){
 				if(this.focus)
 					return;
-				if (this.innerNote && (this.innerNote.data.title.length || this.innerNote.data.body.length)){
+				if (this.innerNote && (!!this.innerNote.data.title || !this.empty_body)){
 					this.save(function() {
 						if(this.clear_on_blur){ 
 							this.clear_form();
@@ -141,7 +147,11 @@ export default {
 	min-height:2em;
 	font-family:inherit;
 	resize:none;
+	&::before {
+		display:none;
+	}
 	&.empty::before {
+		display:inline;
 		content:'Type a note...';
 	}
 	&:active, &:focus {

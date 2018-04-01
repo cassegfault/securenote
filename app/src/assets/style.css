@@ -6,8 +6,10 @@ bg: #f1f4f9;
 
 @import 'open-iconic.min.css';
 
-body{
-	background-color: #f1f4f9;
+html,body{
+	margin:0;
+	padding:0;
+	background-color: #e8e8e8;
 }
 * {
 	box-sizing: border-box;
@@ -25,4 +27,8 @@ button {
 }
 button:hover {
 	background-color: #387fd1;
+}
+.page-container {
+	margin:0 auto;
+	max-width:1200px
 }
