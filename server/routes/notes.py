@@ -40,7 +40,7 @@ def messages_route():
 				'iv': row[2]
 				})
 		# TODO: Paginate
-		return make_response(json.dumps(notes))
+		return make_response(json.dumps({ "notes": notes }))
 	elif request.method == 'PUT':
 		js = json.loads(request.data)
 		note_id =  int_to_hex(cryptrand(64))

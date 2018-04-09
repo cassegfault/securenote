@@ -38,7 +38,10 @@ export class UserAuth {
 		this.password = password;
 
 		// client private
-		this.private_ephemeral = AuthUtil.cryptrand(1024);
+		//this.private_ephemeral = AuthUtil.cryptrand(1024);
+		// For testing
+		this.private_ephemeral = asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(`59cfb0fe6ad85f81c6cded10e77516d5fbd967938636ac08d02ff439df956bc8e787fc1defc1b285bb06a2c0fdf1d156c0594e85b854b097dd8ced8cf9c38fe55121ef616b574ecbec63d1478d23a1f50caaf35bb13b0cec0ff02c999239cc1ec048cceb90d7226bb16020d7557e1fef3520c894b9b4fc8b10b697418d068e4a`))
+		
 
 		// client public ephemeral
 		this.public_ephemeral = AuthUtil.N.power(AuthUtil.g, this.private_ephemeral);
@@ -57,6 +60,7 @@ export class UserAuth {
 		// verifier
 		this.verifier = AuthUtil.N.power(AuthUtil.g, this.private_key);
 		var u = AuthUtil.H(this.public_ephemeral, B);
+
 		if (!u.compare(asmCrypto.BigNumber.fromNumber(0))){
 			return new Promise((resolve,reject) => reject());
 		}
@@ -91,7 +95,7 @@ export class UserAuth {
 }
 
 const AuthUtil = {
-	N: new asmCrypto.Modulus(asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes("c037c37588b4329887e61c2da3324b1ba4b81a63f9748fed2d8a410c2fc21b1232f0d3bfa024276cfd88448197aae486a63bfca7b8bf7754dfb327c7201f6fd17fd7fd74158bd31ce772c9f5f8ab584548a99a759b5a2c0532162b7b6218e8f142bce2c30d7784689a483e095e701618437913a8c39c3dd0d4ca3c500b885fe3") ) ),
+	N: new asmCrypto.Modulus(asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes("00c037c37588b4329887e61c2da3324b1ba4b81a63f9748fed2d8a410c2fc21b1232f0d3bfa024276cfd88448197aae486a63bfca7b8bf7754dfb327c7201f6fd17fd7fd74158bd31ce772c9f5f8ab584548a99a759b5a2c0532162b7b6218e8f142bce2c30d7784689a483e095e701618437913a8c39c3dd0d4ca3c500b885fe3") ) ),
 	g: asmCrypto.BigNumber.fromNumber(2),
 	// H(N,g)
 	k: new asmCrypto.Modulus(asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes("d24e2e1d1500ea44d19052db8e1398d0052e09392e0798faaa78ca229bf4a390") ) ),
@@ -112,8 +116,11 @@ const AuthUtil = {
 		return asmCrypto.BigNumber.fromArrayBuffer(values);
 	},
 	H() {
-		let full_text = [...arguments].map((n) => n.toString()).join(':');
-		return asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.SHA256.bytes(asmCrypto.string_to_bytes(full_text)));
+		let full_text = [...arguments].map((n) => n.toString()).join(':'),
+			hashed = asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.SHA256.bytes(asmCrypto.string_to_bytes(full_text)));
+		console.log("PREHASH", full_text);
+		console.log("HASH", hashed.toString())
+		return hashed;
 	},
 	cryptrand(n = 1024) {
 		return asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.getRandomValues(new Uint8Array(n / 8)));
@@ -122,6 +129,7 @@ const AuthUtil = {
 		return asmCrypto.BigNumber.fromArrayBuffer(asmCrypto.hex_to_bytes(hex));
 	},
 	generate_proof(username, salt, public_ephemeral, B, shared_key) {
+		console.log("PROOF", this.H(this.N).toString(), this.H(this.g).toString());
 		return this.H(
 			this.bn_xor(this.H(this.N), this.H(this.g)),
 			this.H(username),

@@ -65,7 +65,7 @@ function decrypt_note(note, user_key) {
 export const actions = {
 	get_all({ commit, rootGetters }) {
 		var user_key = rootGetters['user/_private_key'];
-		return API.get('/notes').then((notes) => {
+		return API.get('/notes').then(({ notes }) => {
 			commit('set_notes', { notes });
 			for (let idx in notes) {
 				let note = { ...notes[idx] };

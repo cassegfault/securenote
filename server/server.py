@@ -24,17 +24,20 @@ def before_request():
 	global c, conn
 	authenticated = False
 	user_id = None
+	auth_json = None
+	if 'Authentication' in request.headers:
+		auth_json = json.loads(request.headers.get('Authentication'))
 	for cookie,v in request.cookies.iteritems():
 		if 'AUTH-' in cookie:
-			auth_data = json.loads(v)
-			if 'session_token' not in auth_data or 'UID' not in auth_data:
-				break
-			c.execute("SELECT user_id FROM sessions WHERE session_token=? AND UID=?", (auth_data['session_token'], auth_data['UID']))
+			auth_json = json.loads(v)
+			break
+	if auth_json is not None:
+		if 'session_token' in auth_json and 'UID' in auth_json:
+			c.execute("SELECT user_id FROM sessions WHERE session_token=? AND UID=?", (auth_json['session_token'], auth_json['UID']))
 			auth_rows = c.fetchall()
-			if len(auth_rows) < 1:
-				break
-			user_id = auth_rows[0][0]
-			authenticated = True
+			if len(auth_rows) > 0:
+				user_id = auth_rows[0][0]
+				authenticated = True
 
 	g.user_id = user_id
 	g.authenticated = authenticated

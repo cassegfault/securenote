@@ -27,6 +27,8 @@ def auth():
 		A = hex_to_int(js['client_ephemeral'])
 		
 		b = cryptrand(1024)
+		# For testing:
+		#b = hex_to_int('124b5772441b0b42ca71e32bef29c8103c21ae07b1fd24e502a25c2e4d0a16489abd67f500f3e80bd5fca4f1f29b9f43a61cad4b23fd20a37504db049dc4be9f217b1b59cdada11efc741d24bb78e17b1e940d107b4877c0bfdd711ec31f18fbc7d7a6a71b5d9d700fba2edea315e6a2d24efe3e7a0c0c1a1f4a03fba1deba2c')
 		B = (params['k'] * v + pow(params['g'], b, params['N'])) % params['N']
 
 		auth_session_key = int_to_hex(cryptrand(64));
@@ -91,7 +93,7 @@ def auth_verify():
 	for key,v in request.cookies.iteritems():
 		if 'AUTH-' in key:
 			old_uid = key.replace("AUTH-",'')
-			c.execute("DELETE FROM sessions WHERE UID=?",(old_uid,))
+			#c.execute("DELETE FROM sessions WHERE UID=?",(old_uid,))
 			resp.set_cookie(key,'',expires=0)
 
 	c.execute("INSERT INTO sessions (session_token, user_id, UID) VALUES (?, ?, ?)", (session_token, user_id, UID))
